@@ -13,8 +13,8 @@ print(a)
 # Ensure that the second argument changes the output but still contains.
 # the hex values.
 assert binascii.hexlify(b'spam', b'-') != binascii.hexlify(b'spam')
-assert binascii.hexlify(b'spam', b'-')[:2] == binascii.hexlify(b's'))
-assert binascii.hexlify(b'spam', b'-')[-2:] == binascii.hexlify(b'm'))
+assert binascii.hexlify(b'spam', b'-')[:2] == binascii.hexlify(b's')
+assert binascii.hexlify(b'spam', b'-')[-2:] == binascii.hexlify(b'm')
 
 # zero length buffer
 print(binascii.hexlify(b'', b':'))
