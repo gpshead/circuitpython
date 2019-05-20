@@ -29,6 +29,7 @@
 #include <string.h>
 
 #include "py/runtime.h"
+#include "py/objstr.h"
 #include "py/binary.h"
 #include "extmod/modubinascii.h"
 
@@ -43,7 +44,7 @@ static void check_not_unicode(const mp_obj_t arg) {
 mp_obj_t mod_binascii_hexlify(size_t n_args, const mp_obj_t *args) {
     // Second argument is for an extension to allow a separator to be used
     // between values.
-    const char *sep = NULL;
+    const byte *sep = NULL;
     mp_buffer_info_t bufinfo;
     check_not_unicode(args[0]);
     mp_get_buffer_raise(args[0], &bufinfo, MP_BUFFER_READ);
@@ -58,8 +59,11 @@ mp_obj_t mod_binascii_hexlify(size_t n_args, const mp_obj_t *args) {
     size_t out_len = bufinfo.len * 2;
     if (n_args > 1) {
         // 1-char separator between hex numbers
-        out_len += bufinfo.len - 1;
-        sep = mp_obj_str_get_str(args[1]);
+        GET_STR_DATA_LEN(args[1], sep_data, sep_len);
+        if (sep_len > 0) {
+            sep = sep_data;
+            out_len += bufinfo.len - 1;
+        }
     }
     vstr_init_len(&vstr, out_len);
     byte *in = bufinfo.buf, *out = (byte*)vstr.buf;
