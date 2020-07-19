@@ -58,6 +58,9 @@ extension_by_board = {
     "feather_m0_rfm9x": BIN_UF2,
     "uchip": BIN_UF2,
 
+    # nrf52832 (no native USB, uses a FTDI serial to USB chip)
+    "feather_nrf52832": BIN,
+
     # nRF52840 dev kits that may not have UF2 bootloaders,
     "makerdiary_nrf52840_mdk": HEX,
     "makerdiary_nrf52840_mdk_usb_dongle": HEX_UF2,
