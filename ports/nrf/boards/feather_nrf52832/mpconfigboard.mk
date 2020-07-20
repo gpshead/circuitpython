@@ -1,13 +1,45 @@
-MCU_SERIES = m4
-MCU_VARIANT = nrf52
-# Historical: nrf52 means nrf52832
-MCU_SUB_VARIANT = nrf52
 MCU_CHIP = nrf52832
-SD ?= s132
-SOFTDEV_VERSION ?= 2.0.1
 
-LD_FILE = boards/feather_nrf52832/custom_nrf52832_dfu_app_$(SOFTDEV_VERSION).ld
 BOOT_FILE = boards/feather_nrf52832/bootloader/feather52_bootloader_$(SOFTDEV_VERSION)_s132_single
 
-BOOT_SETTING_ADDR = 0x7F000
-NRF_DEFINES += -DNRF52832_XXAA -DNRF52832
+CIRCUITPY_NO_USB = 1
+
+CIRCUITPY_SERIAL_UART = 1
+CIRCUITPY_SERIAL_BLE = 0
+
+CIRCUITPY_USB_HID = 0
+CIRCUITPY_USB_MIDI = 0
+
+CIRCUITPY_AESIO = 0
+CIRCUITPY_AUDIOBUSIO = 0
+# really? lets just save space, we won't be using this in so little ram.
+CIRCUITPY_AUDIOMIXER = 0
+CIRCUITPY_AUDIOMP3 = 0
+
+INTERNAL_FLASH_FILESYSTEM = 1
+
+# save space to bootstrap (copied from pca10100 for now)
+CIRCUITPY_AUDIOMP3 = 0
+CIRCUITPY_BITBANGIO = 0
+CIRCUITPY_BUSIO = 1
+CIRCUITPY_COUNTIO = 0
+CIRCUITPY_DISPLAYIO = 0
+CIRCUITPY_FRAMEBUFFERIO = 0
+CIRCUITPY_FREQUENCYIO = 0
+CIRCUITPY_I2CPERIPHERAL = 0
+CIRCUITPY_NEOPIXEL_WRITE = 0
+CIRCUITPY_NVM = 0
+CIRCUITPY_PIXELBUF  = 0
+CIRCUITPY_RGBMATRIX = 0
+CIRCUITPY_ROTARYIO = 0
+CIRCUITPY_RTC = 1
+CIRCUITPY_SDCARDIO = 0
+CIRCUITPY_TOUCHIO = 0
+CIRCUITPY_ULAB = 0
+
+SUPEROPT_GC = 0
+
+# TODO(gpshead): Is this true? they're in ports/nrf/mpconfigport.h now.
+# These defines must be overridden before mpconfigboard.h is included, which is
+# why they are passed on the command line.
+CFLAGS += -DSPIM3_BUFFER_SIZE=0 -DSOFTDEVICE_RAM_SIZE='(8*1024)'

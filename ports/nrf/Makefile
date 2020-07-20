@@ -81,8 +81,10 @@ INC += -I./nrfx/drivers/src
 INC += -I./bluetooth
 INC += -I./peripherals
 INC += -I../../lib/mp-readline
+ifneq ($(CIRCUITPY_NO_USB), 1)
 INC += -I../../lib/tinyusb/src
 INC += -I../../supervisor/shared/usb
+endif
 
 #Debugging/Optimization
 ifeq ($(DEBUG), 1)
@@ -124,8 +126,10 @@ ifndef INTERNAL_LIBM
 LIBS += -lm
 endif
 
+ifneq ($(CIRCUITPY_NO_USB), 1)
 # TinyUSB defines
 CFLAGS += -DCFG_TUSB_MCU=OPT_MCU_NRF5X -DCFG_TUD_CDC_RX_BUFSIZE=1024 -DCFG_TUD_CDC_TX_BUFSIZE=1024 -DCFG_TUD_MSC_BUFSIZE=4096 -DCFG_TUD_MIDI_RX_BUFSIZE=128 -DCFG_TUD_MIDI_TX_BUFSIZE=128
+endif
 
 SRC_NRFX = $(addprefix nrfx/,\
 	drivers/src/nrfx_power.c \
@@ -245,7 +249,11 @@ SRC_QSTR += $(SRC_C) $(SRC_SUPERVISOR) $(SRC_MOD) $(SRC_COMMON_HAL_EXPANDED) $(S
 SRC_QSTR_PREPROCESSOR +=
 
 
+ifeq ($(MCU_SUB_VARIANT),nrf52)  # Historical value, means nRF52832 (no USB)
+all: $(BUILD)/firmware.bin
+else
 all: $(BUILD)/firmware.bin $(BUILD)/firmware.uf2
+endif
 
 $(BUILD)/firmware.elf: $(OBJ) $(GENERATED_LD_FILE)
 	$(STEPECHO) "LINK $@"

@@ -140,7 +140,11 @@ bool convert_frequency(uint32_t frequency, uint16_t *countertop, nrf_pwm_clk_t *
 }
 
 // We store these in an array because we cannot compute them.
-static IRQn_Type pwm_irqs[4] = {PWM0_IRQn, PWM1_IRQn, PWM2_IRQn, PWM3_IRQn};
+static IRQn_Type pwm_irqs[4] = {PWM0_IRQn, PWM1_IRQn, PWM2_IRQn
+#if NRFX_CHECK(NRFX_PWM3_ENABLED)
+  , PWM3_IRQn
+#endif
+};
 
 NRF_PWM_Type *pwmout_allocate(uint16_t countertop, nrf_pwm_clk_t base_clock,
         bool variable_frequency, int8_t *channel_out, bool *pwm_already_in_use_out,

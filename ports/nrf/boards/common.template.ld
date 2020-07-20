@@ -1,5 +1,5 @@
 /*
-    GNU linker script for NRF52840 w/ s140 6.0.0 SoftDevice
+    GNU linker script for nRF52832|nRF52840 w/ s132|s140 6.0|7.0 SoftDevice
 */
 
 /* Specify the memory areas */

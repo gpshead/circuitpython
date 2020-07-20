@@ -24,11 +24,6 @@
  * THE SOFTWARE.
  */
 
-#include <string.h>
-#include <stdbool.h>
-
-#include "nrf.h"
-
 #include "boards/board.h"
 
 void board_init(void) {

@@ -72,5 +72,26 @@ SOFTDEV_VERSION ?= 7.0.1
 BOOT_SETTING_ADDR = 0x7F000
 NRF_DEFINES += -DNRF52833_XXAA -DNRF52833
 
+else
+ifeq ($(MCU_CHIP),nrf52832)
+MCU_SERIES = m4
+MCU_VARIANT = nrf52
+# Historical: nrf52 means nrf52832
+MCU_SUB_VARIANT = nrf52
+USB = FALSE
+
+SD ?= s132
+# In branch 3.x: 2.0.1 was recommended, with tenative 5.0.0 support checked in.
+# The nrf52840 builds are tied to 6.x via their shipped bootloader.
+SOFTDEV_VERSION ?= 7.0.1
+
+BOOT_SETTING_ADDR = 0x7F000
+NRF_DEFINES += -DNRF52 -DNRF52832_XXAA -DNRF52832 -DNRF_USB=0
+
+# CircuitPython doesn't yet support NFC, allow IO use.
+#  https://github.com/adafruit/circuitpython/issues/1300
+CFLAGS += -DCONFIG_NFCT_PINS_AS_GPIOS
+
+endif
 endif
 endif

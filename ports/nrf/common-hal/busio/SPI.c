@@ -69,10 +69,12 @@ STATIC spim_peripheral_t spim_peripherals[] = {
 
 STATIC bool never_reset[MP_ARRAY_SIZE(spim_peripherals)];
 
+#if NRFX_CHECK(NRFX_SPIM3_ENABLED)
 // Separate RAM area for SPIM3 transmit buffer to avoid SPIM3 hardware errata.
 // https://infocenter.nordicsemi.com/index.jsp?topic=%2Ferrata_nRF52840_Rev2%2FERR%2FnRF52840%2FRev2%2Flatest%2Fanomaly_840_198.html
 extern uint32_t _spim3_ram;
 STATIC uint8_t *spim3_transmit_buffer = (uint8_t *) &_spim3_ram;
+#endif
 
 void spi_reset(void) {
     for (size_t i = 0 ; i < MP_ARRAY_SIZE(spim_peripherals); i++) {
@@ -235,17 +237,21 @@ void common_hal_busio_spi_unlock(busio_spi_obj_t *self) {
 }
 
 bool common_hal_busio_spi_write(busio_spi_obj_t *self, const uint8_t *data, size_t len) {
+#if NRFX_CHECK(NRFX_SPIM3_ENABLED)
     const bool is_spim3 = self->spim_peripheral->spim.p_reg == NRF_SPIM3;
+#endif
     uint8_t *next_chunk = (uint8_t *) data;
 
     while (len > 0) {
         size_t chunk_size = MIN(len, self->spim_peripheral->max_xfer_size);
         uint8_t *chunk = next_chunk;
+#if NRFX_CHECK(NRFX_SPIM3_ENABLED)
         if (is_spim3) {
             // If SPIM3, copy into unused RAM block, and do DMA from there.
             memcpy(spim3_transmit_buffer, chunk, chunk_size);
             chunk = spim3_transmit_buffer;
         }
+#endif
         const nrfx_spim_xfer_desc_t xfer = NRFX_SPIM_XFER_TX(chunk, chunk_size);
         if (nrfx_spim_xfer(&self->spim_peripheral->spim, &xfer, 0) != NRFX_SUCCESS) {
             return false;
@@ -272,18 +278,22 @@ bool common_hal_busio_spi_read(busio_spi_obj_t *self, uint8_t *data, size_t len,
 }
 
 bool common_hal_busio_spi_transfer(busio_spi_obj_t *self, const uint8_t *data_out, uint8_t *data_in, size_t len) {
+#if NRFX_CHECK(NRFX_SPIM3_ENABLED)
     const bool is_spim3 = self->spim_peripheral->spim.p_reg == NRF_SPIM3;
+#endif
     const uint8_t *next_chunk_out = data_out;
     uint8_t *next_chunk_in = data_in;
 
     while (len > 0) {
-        const uint8_t *chunk_out = next_chunk_out;
         size_t chunk_size = MIN(len, self->spim_peripheral->max_xfer_size);
+#if NRFX_CHECK(NRFX_SPIM3_ENABLED)
+        const uint8_t *chunk_out = next_chunk_out;
         if (is_spim3) {
             // If SPIM3, copy into unused RAM block, and do DMA from there.
             memcpy(spim3_transmit_buffer, chunk_out, chunk_size);
             chunk_out = spim3_transmit_buffer;
         }
+#endif
         const nrfx_spim_xfer_desc_t xfer =
             NRFX_SPIM_SINGLE_XFER(next_chunk_out, chunk_size,
                                   next_chunk_in, chunk_size);

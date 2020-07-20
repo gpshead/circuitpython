@@ -75,7 +75,11 @@
 // UART
 #define NRFX_UARTE_ENABLED 1
 #define NRFX_UARTE0_ENABLED 1
+#ifdef NRF52832
+#define NRFX_UARTE1_ENABLED 0
+#else
 #define NRFX_UARTE1_ENABLED 1
+#endif
 
 // PWM
 #define NRFX_PWM0_ENABLED 1

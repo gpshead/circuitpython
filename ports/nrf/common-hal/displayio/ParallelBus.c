@@ -52,8 +52,10 @@ void common_hal_displayio_parallelbus_construct(displayio_parallelbus_obj_t* sel
         g = NRF_P0;
         num_pins_in_port = P0_PIN_NUM;
     } else {
+#ifdef NRF_P1
         g = NRF_P1;
         num_pins_in_port = P1_PIN_NUM;
+#endif
     }
     g->DIRSET = 0xff << (data_pin % num_pins_in_port);
     for (uint8_t i = 0; i < 8; i++) {
@@ -83,8 +85,10 @@ void common_hal_displayio_parallelbus_construct(displayio_parallelbus_obj_t* sel
         self->write_group = NRF_P0;
         num_pins_in_write_port = P0_PIN_NUM;
     } else {
+#ifdef NRF_P1
         self->write_group = NRF_P1;
         num_pins_in_write_port = P1_PIN_NUM;
+#endif
     }
     self->write_mask = 1 << (write->number % num_pins_in_write_port);
 

@@ -38,6 +38,9 @@
 
 #if CIRCUITPY_SERIAL_BLE
 
+void serial_early_init(void) {
+}
+
 void serial_init(void) {
     ble_uart_init();
 }
@@ -63,17 +66,19 @@ void serial_write(const char *text) {
 uint8_t serial_received_char;
 nrfx_uarte_t serial_instance = NRFX_UARTE_INSTANCE(0);
 
-void serial_init(void) {
+void serial_early_init(void) {
     nrfx_uarte_config_t config = {
         .pseltxd = MICROPY_HW_UART_TX,
         .pselrxd = MICROPY_HW_UART_RX,
         .pselcts = NRF_UARTE_PSEL_DISCONNECTED,
         .pselrts = NRF_UARTE_PSEL_DISCONNECTED,
         .p_context = NULL,
-        .hwfc = NRF_UARTE_HWFC_DISABLED,
-        .parity = NRF_UARTE_PARITY_EXCLUDED,
         .baudrate = NRF_UARTE_BAUDRATE_115200,
-        .interrupt_priority = 7
+        .interrupt_priority = 7,
+        .hal_cfg = {
+            .hwfc = NRF_UARTE_HWFC_DISABLED,
+            .parity = NRF_UARTE_PARITY_EXCLUDED,
+        }
     };
 
     nrfx_uarte_uninit(&serial_instance);
@@ -85,6 +90,9 @@ void serial_init(void) {
 
     // enabled receiving
     nrf_uarte_task_trigger(serial_instance.p_reg, NRF_UARTE_TASK_STARTRX);
+}
+
+void serial_init(void) {
 }
 
 bool serial_connected(void) {

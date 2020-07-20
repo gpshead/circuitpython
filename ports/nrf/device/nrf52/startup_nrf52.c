@@ -108,8 +108,9 @@ void PWM2_IRQHandler          (void) __attribute__ ((weak, alias("Default_Handle
 void SPIM2_SPIS2_SPI2_IRQHandler (void) __attribute__ ((weak, alias("Default_Handler")));
 void RTC2_IRQHandler          (void) __attribute__ ((weak, alias("Default_Handler")));
 void I2S_IRQHandler           (void) __attribute__ ((weak, alias("Default_Handler")));
+void FPU_IRQHandler           (void) __attribute__ ((weak, alias("Default_Handler")));
 
-const func __Vectors[] __attribute__ ((section(".isr_vector"))) = {
+const func __Vectors[] __attribute__ ((used, section(".isr_vector"))) = {
     (func)&_estack,
     Reset_Handler,
     NMI_Handler,
@@ -165,5 +166,6 @@ const func __Vectors[] __attribute__ ((section(".isr_vector"))) = {
     PWM2_IRQHandler,
     SPIM2_SPIS2_SPI2_IRQHandler,
     RTC2_IRQHandler,
-    I2S_IRQHandler
+    I2S_IRQHandler,
+    FPU_IRQHandler,
 };

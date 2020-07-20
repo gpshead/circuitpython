@@ -42,7 +42,9 @@
 #include "py/runtime.h"
 #include "supervisor/shared/safe_mode.h"
 #include "supervisor/shared/tick.h"
+#if NRF_USB
 #include "supervisor/usb.h"
+#endif
 #include "shared-bindings/_bleio/__init__.h"
 #include "shared-bindings/_bleio/Adapter.h"
 #include "shared-bindings/_bleio/Address.h"
@@ -343,8 +345,10 @@ void common_hal_bleio_adapter_set_enabled(bleio_adapter_obj_t *self, bool enable
     } else {
         err_code = sd_softdevice_disable();
     }
+#if NRF_USB
     // Re-init USB hardware
     init_usb_hardware();
+#endif
 
     check_nrf_error(err_code);
 

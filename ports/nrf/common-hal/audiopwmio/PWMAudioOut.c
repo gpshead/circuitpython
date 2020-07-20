@@ -166,8 +166,11 @@ void audiopwmout_background() {
     // Check the NVIC first because it is part of the CPU and fast to read.
     if (!NVIC_GetPendingIRQ(PWM0_IRQn) &&
         !NVIC_GetPendingIRQ(PWM1_IRQn) &&
-        !NVIC_GetPendingIRQ(PWM2_IRQn) &&
-        !NVIC_GetPendingIRQ(PWM3_IRQn)) {
+        !NVIC_GetPendingIRQ(PWM2_IRQn)
+#ifndef NRF52832
+        && !NVIC_GetPendingIRQ(PWM3_IRQn)
+#endif
+       ) {
         return;
     }
     // Check our objects because the PWM could be active for some other reason.

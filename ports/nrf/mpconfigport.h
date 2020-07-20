@@ -60,6 +60,21 @@
 #endif
 #endif
 
+#ifdef NRF52832
+#define MICROPY_PY_SYS_PLATFORM "nRF52832"
+#define FLASH_SIZE                  (0x80000)  // 512 KiB
+#define RAM_SIZE                    (0x10000)  // 64 KiB
+// nRF82532 does not have SPIM3 but this must be defined for the linker script.
+#ifndef SPIM3_BUFFER_SIZE
+#define SPIM3_BUFFER_SIZE  (0)
+#endif
+// Not much ram, reserve a small stack ala CircuitPython 3.x.
+#define CIRCUITPY_DEFAULT_STACK_SIZE            4096
+#ifndef SOFTDEVICE_RAM_SIZE
+#define SOFTDEVICE_RAM_SIZE         (8*1024)
+#endif
+#endif
+
 #define MICROPY_PY_COLLECTIONS_ORDEREDDICT       (1)
 #define MICROPY_PY_FUNCTION_ATTRS                (1)
 #define MICROPY_PY_IO                            (1)
@@ -69,7 +84,9 @@
 #define MICROPY_PY_UJSON                         (1)
 
 // 24kiB stack
+#ifndef CIRCUITPY_DEFAULT_STACK_SIZE
 #define CIRCUITPY_DEFAULT_STACK_SIZE            0x6000
+#endif
 
 ////////////////////////////////////////////////////////////////////////////////////////////////////
 
@@ -93,6 +110,10 @@
   #endif
 #else
   #define CIRCUITPY_INTERNAL_FLASH_FILESYSTEM_SIZE (0)
+#endif
+
+#ifndef NRF_USB
+#define NRF_USB  (1)
 #endif
 
 // Flash layout, starting at 0x00000000

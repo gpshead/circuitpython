@@ -40,8 +40,6 @@ run following command to install [adafruit-nrfutil](https://github.com/adafruit/
 To build a CircuitPython binary with default settings for the
 `feather_nrf52832` target enter:
 
-> **NOTE:** `BOARD=feather_nrf52832` is the default option and isn't stricly required.
-
 ```
 $ make BOARD=feather_nrf52832 V=1
 ```
@@ -59,7 +57,7 @@ set to `1` in the `#elif (BLUETOOTH_SD == 132)` section:
 ... then build as normal, via:
 
 ```
-$ make BOARD=feather52832 V=1
+$ make BOARD=feather_nrf52832 V=1
 ```
 
 You can then connect over BLE UART using an application like Bluefruit LE
